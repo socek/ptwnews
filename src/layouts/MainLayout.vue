@@ -2,6 +2,12 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+        <img
+          alt="Quasar logo"
+          src="~assets/ptwlogo.png"
+          style="width: 73px; height: 25px"
+        >
+
         <q-toolbar-title>
           Prime Time Wrestilng
         </q-toolbar-title>
@@ -17,14 +23,9 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'MainLayout',
-
-  setup () {
-
-    return {
-    }
-  }
 })
 </script>
