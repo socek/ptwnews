@@ -8,8 +8,8 @@
         <q-list bordered separator>
           <q-item v-ripple v-for="post in posts" :key="post.id">
             <q-item-section>
-              <q-item-label>{{post.id}}</q-item-label>
-              <q-item-label caption>{{post.title.rendered}}</q-item-label>
+              <q-item-label><div v-html="post.title.rendered" /></q-item-label>
+              <q-item-label caption>{{ post.id }}</q-item-label>
             </q-item-section>
           </q-item>
 
@@ -18,39 +18,32 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import { defineComponent, ref } from 'vue'
 import { api } from 'boot/axios'
 import { useQuasar } from 'quasar'
 
-export default defineComponent({
-  name: 'IndexPage',
-  setup () {
-    const $q = useQuasar()
-    const posts = ref(null)
-    const status = ref('off')
+const $q = useQuasar()
+const posts = ref(null)
+const status = ref('off')
 
-    async function loadData () {
-      let result;
-      try {
-        status.value = 'loading';
-        result = await api.get('/')
-      } catch(error) {
-        $q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })
-        return
-      }
-      posts.value = result.data
-      status.value = 'finished'
-    }
-
-    loadData()
-
-    return {status, posts}
+async function loadData () {
+  let result;
+  try {
+    status.value = 'loading';
+    result = await api.get('/')
+  } catch(error) {
+    $q.notify({
+      color: 'negative',
+      position: 'top',
+      message: 'Loading failed',
+      icon: 'report_problem'
+    })
+    return
   }
-})
+  posts.value = result.data
+  status.value = 'finished'
+}
+
+loadData()
 </script>
