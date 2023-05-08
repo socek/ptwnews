@@ -7,6 +7,7 @@ CMD ["yarn", "dev"]
 
 WORKDIR $CODE_DIR
 
+RUN yarn global add @quasar/cli
 COPY code/package.json .
 COPY code/yarn.lock .
 

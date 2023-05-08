@@ -1,38 +1,64 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-import statuses from "stores/statuses.js"
-import { api } from 'boot/axios'
-import { useQuasar } from 'quasar'
+import statuses from "stores/statuses.js";
+import { api } from "boot/axios";
+import { useQuasar } from "quasar";
 
-export const useCounterStore = defineStore('posts', {
+const collectionPosts = "posts"
+const collectionLastFetch = collectionPosts + "_lastFetch"
+
+async function pushToDb(posts) {
+  let trans = request.transaction(["posts"], "readwrite");
+  let store = trans.objectStore("posts");
+  await trans;
+}
+
+export default defineStore("posts", {
   state: () => ({
+    lastFetch: null,
     posts: null,
-    status: statuses.not_started,
+    fetchStatus: statuses.not_started,
   }),
+  getters: {
+    isReady: (state) => state.fetchStatus == statuses.finished || state.lastFetch
+  },
   actions: {
-    async fetchFromCache() {
-
+    async init() {
+      const $q = useQuasar()
+      if(!this.lastFetch) {
+        this.posts = $q.localStorage.getItem(collectionPosts)
+        this.lastFetch = $q.localStorage.getItem(collectionLastFetch)
+        await this.fetch()
+      }
     },
 
     async fetch() {
       const $q = useQuasar()
-      let result
+      let result;
 
       try {
-        this.status.value = statuses.running;
-        result = await api.get('/')
-      } catch(error) {
+        this.fetchStatus = statuses.running;
+        result = await api.get("/");
+      } catch (error) {
         $q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })
-        this.status.value = statuses.unable_to_fetch;
-        return
+          color: "negative",
+          position: "top",
+          message: "Loading failed",
+          icon: "report_problem",
+        });
+        this.fetchStatus = statuses.unable_to_fetch;
+        return;
       }
-      this.posts.value = result.data
-      this.status.value = statuses.finished
+      $q.notify({
+        color: "positive",
+        position: "top",
+        message: "News Updated",
+      });
+      this.posts = result.data
+      this.fetchStatus = statuses.finished;
+      this.lastFetch = Date.now();
+      $q.localStorage.set(collectionPosts, this.posts)
+      $q.localStorage.set(collectionLastFetch, this.lastFetch)
     },
   },
 });

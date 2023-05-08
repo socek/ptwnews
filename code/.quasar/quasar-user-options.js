@@ -13,9 +13,9 @@
 
 
 
-import {Notify} from 'quasar'
+import {Notify,LocalStorage} from 'quasar'
 
 
 
-export default { config: {"notify":{}},plugins: {Notify} }
+export default { config: {"notify":{}},plugins: {Notify,LocalStorage} }
 
