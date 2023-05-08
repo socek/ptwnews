@@ -1,0 +1,9 @@
+version: "3.6"
+services:
+  ptwnews:
+    build:
+      dockerfile: Dockerfile
+    ports:
+    - 9000:9000
+    volumes:
+    - ./code:/code
