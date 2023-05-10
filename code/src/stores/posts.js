@@ -43,8 +43,7 @@ export default defineStore("posts", {
         $q.notify({
           color: "negative",
           position: "top",
-          message: "Loading failed",
-          icon: "report_problem",
+          message: "News loading failed",
         });
         this.fetchStatus = statuses.unable_to_fetch;
         return;

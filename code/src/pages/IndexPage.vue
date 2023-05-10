@@ -24,8 +24,6 @@ import { api } from 'boot/axios'
 import useCounterStore from "stores/posts"
 
 const store = useCounterStore()
-const isReady = computed(() => store.isReady())
-const posts = computed(() => store.posts)
 
 onMounted(() => {
   store.init()
